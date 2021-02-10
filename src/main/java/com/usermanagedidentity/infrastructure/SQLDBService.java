@@ -6,9 +6,13 @@
 package com.usermanagedidentity.infrastructure;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -16,6 +20,7 @@ import java.sql.Statement;
  */
 public class SQLDBService {
     
+    private static final Logger logger = LogManager.getLogger(SQLDBService.class);
     //Access Token for DB
     private String accessToken = null;
     private String dbName = null;
@@ -28,7 +33,7 @@ public class SQLDBService {
     }
     
     public void displayData() throws Exception{
-        System.out.printf("Accesss token: %s  , dbName: %s \n",accessToken, dbName);
+        logger.printf(Level.TRACE,"Accesss token: %s  , dbName: %s \n",accessToken, dbName);
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setServerName(dbName);
         ds.setDatabaseName("EJ");
@@ -38,7 +43,7 @@ public class SQLDBService {
                 ResultSet rs = stmt.executeQuery("SELECT ID, FirstName ,MiddelInitial,LastName FROM Person ")){
             
             while(rs.next()){
-                System.out.printf(" First Name : %s ,  Initial : %s  , LastName %s ", rs.getString("FirstName"),rs.getString("MiddelInitial"),rs.getString("LastName"));
+                logger.printf(Level.TRACE," First Name : %s ,  Initial : %s  , LastName %s ", rs.getString("FirstName"),rs.getString("MiddelInitial"),rs.getString("LastName"));
             }
             
         }

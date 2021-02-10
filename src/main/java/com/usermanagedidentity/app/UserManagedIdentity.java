@@ -10,6 +10,8 @@ import com.usermanagedidentity.infrastructure.SQLDBService;
 import com.usermanagedidentity.infrastructure.TokenService;
 import com.usermanagedidentity.infrastructure.VaultService;
 import java.net.URL;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -17,14 +19,15 @@ import java.net.URL;
  */
 public class UserManagedIdentity {
     
-    
+    private static final Logger logger = LogManager.getLogger(UserManagedIdentity.class);
     public static void main(String args[]){
         
         
         // Get a token from Azure tenant for the Managed Identity
         //Create an Instance of the Token Servce 
         try{
-            TokenService  tokenService = new TokenService();
+            logger.trace("Starting the Application");
+            TokenService  tokenService = new TokenService();            
             tokenService.setURL(new URL(Utility.getInstance().getValue("vaultTokenUrl")));
             VaultService vaultService = new VaultService();
             vaultService.setToken(tokenService.getToken());
@@ -33,9 +36,9 @@ public class UserManagedIdentity {
             tokenService.setURL(new URL(Utility.getInstance().getValue("dbTokenUrl")));
             sqlDbService.setToken(tokenService.getToken());
             sqlDbService.displayData();
-            
+            logger.trace("Ending  the Application");
         }catch(Exception e){
-            System.out.println(e);
+            logger.error(e);
         }                
     }
     

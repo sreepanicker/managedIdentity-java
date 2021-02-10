@@ -11,6 +11,9 @@ import com.fasterxml.jackson.core.JsonToken;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -18,6 +21,8 @@ import java.net.URL;
  */
 public class VaultService {
 
+    
+    private static final Logger logger = LogManager.getLogger(VaultService.class);
     private String accessToken;
 
     public void setToken(String accessToken) {
@@ -66,23 +71,23 @@ public class VaultService {
         String keyValue = null;
         URL url = getURL(vaultURI, key);
         if (url != null) {
-            System.out.println("Starting the Connnection .....");
+            logger.trace("Starting the Connnection .....");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             String bearerToekn = "Bearer " + accessToken;
             con.setRequestProperty("Authorization", bearerToekn);
             
-            System.out.printf("Connection String %s\n", con.toString());
+            logger.printf(Level.TRACE,"Connection String %s\n", con.toString());
             
             if (con.getResponseCode() != 200) {
                 throw new Exception("Error calling key Valute endpoint.");
             }
             
-            System.out.println("Connection Successed .....");
+            logger.trace("Connection Successed .....");
             try {
 
                 InputStream inputStream = con.getInputStream();
-                System.out.println(" Response String :" + inputStream);
+                logger.trace(" Response String :" + inputStream);
                 JsonFactory factory = new JsonFactory();
 
                 JsonParser parser = factory.createParser(inputStream);
@@ -98,13 +103,12 @@ public class VaultService {
                     }
                 }
 
-            } catch (Exception e) {
-                System.out.println(" error in Getting value");
-                System.out.println(e);
+            } catch (Exception e) {               
+                logger.error(e);
 
             }
         }
-        System.out.printf("Secrts from the the Vault %s \n ", keyValue);
+        logger.printf(Level.TRACE, "Secrts from the the Vault %s \n ", keyValue);
         return keyValue;
     }
    
@@ -141,13 +145,13 @@ public class VaultService {
         
         //https://appuseridentity.vault.azure.net/secrets/dbString/a660f83289f847a2aab39170246e2ab4
         //stringBuffer.append(vaultURI).append("/secrets").append("?api-version=7.1");
-        System.out.printf("URL String %s \n", stringBuffer.toString());
+        logger.printf(Level.TRACE,"URL String %s \n", stringBuffer.toString());
 
         try {
             url = new URL(stringBuffer.toString());
         } catch (Exception e) {
-            System.out.println(" URL Exception ");
-            System.out.println(e);
+   
+            logger.error(e);
         }
         return url;
     }

@@ -11,13 +11,16 @@ import com.fasterxml.jackson.core.JsonToken;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author sreep
  */
 public class TokenService {
-    
+    private static final Logger logger = LogManager.getLogger(TokenService.class);
     // URL String to Token service 
     
     private URL url = null;
@@ -66,7 +69,7 @@ public class TokenService {
     }*/
     public String getToken()throws Exception{
         String accessToken = null;
-        System.out.printf("Getting the token, url  %s\n", url.toString());
+        logger.printf(Level.TRACE,"Getting the token, url  %s\n", url.toString());
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Metadata", "true");
@@ -75,7 +78,7 @@ public class TokenService {
             throw new Exception("Error calling managed identity token endpoint.");
         }
         InputStream inputStream = con.getInputStream();
-        System.out.println(" Response String :" + inputStream);
+        logger.printf(Level.TRACE," Response String :" + inputStream);
         JsonFactory factory = new JsonFactory();
         try{
             JsonParser  parser = factory.createParser(inputStream);
@@ -94,10 +97,9 @@ public class TokenService {
             
             
         }catch(Exception e){
-            System.out.println("Token Access issue");
-            System.out.println(e);
+            logger.error(e);
         }
-        System.out.printf("Access Toekn  %s \n" , accessToken);
+        logger.printf(Level.TRACE,"Access Toekn  %s \n" , accessToken);
         return accessToken;
     }
 }
