@@ -10,9 +10,9 @@ import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  *
@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class SQLDBService {
     
-    private static final Logger logger = LogManager.getLogger(SQLDBService.class);
+    private static final Logger logger = Logger.getLogger(SQLDBService.class.getName());
     //Access Token for DB
     private String accessToken = null;
     private String dbName = null;
@@ -33,7 +33,7 @@ public class SQLDBService {
     }
     
     public void displayData() throws Exception{
-        logger.printf(Level.TRACE,"Accesss token: %s  , dbName: %s \n",accessToken, dbName);
+        logger.log(Level.INFO,"Accesss token: " +accessToken + " dbName: "+ dbName);
         SQLServerDataSource ds = new SQLServerDataSource();
         ds.setServerName(dbName);
         ds.setDatabaseName("EJ");
@@ -43,7 +43,7 @@ public class SQLDBService {
                 ResultSet rs = stmt.executeQuery("SELECT ID, FirstName ,MiddelInitial,LastName FROM Person ")){
             
             while(rs.next()){
-                logger.printf(Level.TRACE," First Name : %s ,  Initial : %s  , LastName %s ", rs.getString("FirstName"),rs.getString("MiddelInitial"),rs.getString("LastName"));
+                logger.log(Level.INFO," First Name : " + rs.getString("FirstName") +" , Initial :" + rs.getString("MiddelInitial") +", LastName : " + rs.getString("LastName"));
             }
             
         }

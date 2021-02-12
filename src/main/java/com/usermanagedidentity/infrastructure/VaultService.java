@@ -11,9 +11,9 @@ import com.fasterxml.jackson.core.JsonToken;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  *
@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 public class VaultService {
 
     
-    private static final Logger logger = LogManager.getLogger(VaultService.class);
+    private static final Logger logger = Logger.getLogger(VaultService.class.getName());
     private String accessToken;
 
     public void setToken(String accessToken) {
@@ -71,23 +71,23 @@ public class VaultService {
         String keyValue = null;
         URL url = getURL(vaultURI, key);
         if (url != null) {
-            logger.trace("Starting the Connnection .....");
+            logger.log(Level.INFO,"Starting the Connnection .....");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             String bearerToekn = "Bearer " + accessToken;
             con.setRequestProperty("Authorization", bearerToekn);
             
-            logger.printf(Level.TRACE,"Connection String %s\n", con.toString());
+            logger.log(Level.INFO,"Connection String " + con.toString());
             
             if (con.getResponseCode() != 200) {
                 throw new Exception("Error calling key Valute endpoint.");
             }
             
-            logger.trace("Connection Successed .....");
+            logger.log(Level.INFO,"Connection Successed .....");
             try {
 
                 InputStream inputStream = con.getInputStream();
-                logger.trace(" Response String :" + inputStream);
+                logger.log(Level.INFO," Response String :" + inputStream);
                 JsonFactory factory = new JsonFactory();
 
                 JsonParser parser = factory.createParser(inputStream);
@@ -104,11 +104,11 @@ public class VaultService {
                 }
 
             } catch (Exception e) {               
-                logger.error(e);
+                logger.log(Level.SEVERE, e.toString());
 
             }
         }
-        logger.printf(Level.TRACE, "Secrts from the the Vault %s \n ", keyValue);
+        logger.log(Level.INFO, "Secrts from the the Vault "+ keyValue);
         return keyValue;
     }
    
@@ -145,13 +145,13 @@ public class VaultService {
         
         //https://appuseridentity.vault.azure.net/secrets/dbString/a660f83289f847a2aab39170246e2ab4
         //stringBuffer.append(vaultURI).append("/secrets").append("?api-version=7.1");
-        logger.printf(Level.TRACE,"URL String %s \n", stringBuffer.toString());
+        logger.log(Level.INFO,"URL String" + stringBuffer.toString());
 
         try {
             url = new URL(stringBuffer.toString());
         } catch (Exception e) {
    
-            logger.error(e);
+            logger.log(Level.SEVERE,e.toString());
         }
         return url;
     }
