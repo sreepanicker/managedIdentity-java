@@ -6,5 +6,26 @@ This application also uses Azure Application Insight Java SDK and  instruments r
 
 **Steps to configure and runs the Java Application**
 
-    1. Create a Create a User assigned managed identity (Search for Managed Identity in the Azure Portal)
-    2. 
+    1. Create a User assigned managed identity (Search for Managed Identity in the Azure Portal)
+    2.  Provision a Virtual Machine in Azure 
+    3.  Set User assigned Managed identity to Virtual Machine
+    4.  Provision an Azure App Config
+    5.  Set User assigned managed identity to Azure App Config
+    6.  Assign permission  to User managed identity for accessing Azure App Config
+    7.  Create a key in Azure App Config for the application; we store the Azure key vault URL in this key
+    8.  Provision Azure Key Vault
+    9.  Assign permission to User managed identity for accessing Azure Key Vault
+    10. Create a Secret in Azure Key vault; we store the SQL DB server URL in this secret 
+    11. Provision a SQL DB
+    12. Create a database 
+    13. Create a contained user in the database and execute the following commands.
+        a. Create User [User-assigned managed identity] FROM EXTERNAL PROVIDER
+        b. ALTER ROLE db_datareader ADD MEMBER [User-assigned managed identity] 
+        c. ALTER ROLE db_datawriter ADD MEMBER [User-assigned managed identity] 
+        To execute these commands, the User needs to be an admin in SQL DB and an Azure AD tenant user.
+    14. Set firewall rules in SQL DB
+    
+    if you are interested, you can create an Azure application insight and ingest application trace details into Application insight. You can use the following configuration details.
+
+   
+    
