@@ -24,8 +24,8 @@ This application also uses Azure Application Insight Java SDK and  instruments r
         c. ALTER ROLE db_datawriter ADD MEMBER [User-assigned managed identity] 
         To execute these commands, the User needs to be an admin in SQL DB and an Azure AD tenant user.
     14. Set firewall rules in SQL DB
-    
-    if you are interested, you can create an Azure application insight and ingest application trace details into Application insight. You can use the following configuration details.
+
+If you are interested, you can create an Azure application insight and ingest application trace details into Application insight. You can use the following configuration details.
 
    
     
