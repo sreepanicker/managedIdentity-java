@@ -25,7 +25,20 @@ This application also uses Azure Application Insight Java SDK and  instruments r
         To execute these commands, the User needs to be an admin in SQL DB and an Azure AD tenant user.
     14. Set firewall rules in SQL DB
 
-If you are interested, you can create an Azure application insight and ingest application trace details into Application insight. You can use the following configuration details.
+
+applicationinsight.json
+{
+   "connectionString": "InstrumentationKey=XXXXX", 
+   "instrumentation": {
+    "logging": {
+      "level": "TRACE"
+    }
+  }
+}
+
+**How to run the Java Application**
+
+java -javaagent:applicationinsights-agent-3.0.2.jar -jar UserManagedIdentity-1.0-SNAPSHOT-jar-with-dependencies.jar
 
    
     
